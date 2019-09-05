@@ -44,19 +44,16 @@ class MissingColumnSolutionProvider implements HasSolutionsForThrowable
                 }
             }
         }
-
-        switch ($type) {
-            case 'string':
-                break;
-            case 'boolean':
-                break;
-            case 'integer':
-                break;
-            case 'Carbon\Carbon':
-                break;
+        // composer require laracasts/generators
+        if ($type == 'Carbon\Carbon') {
+            $type = 'date';
         }
         dump(compact('tableName', 'fieldName', 'type'));
-        dd();
+        $command = 'php artisan make:migration:schema '
+            . 'add_' . $fieldName . '_to_' . $tableName . '_table '
+            . '--schema=' . $fieldName . ':' . $type . ':nullable '
+            . '--model=0';
+        dd($command);
 
         return $this->isBadTableErrorCode($throwable->getCode());
     }
